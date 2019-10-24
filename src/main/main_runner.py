@@ -1,10 +1,13 @@
 import os
-import logging
-import slack
 import ssl as ssl_lib
+
 import certifi
+import slack
 
 # Creates and sends the simplest of messages back to the user
+from src.main.trophy_runner import TrophyRunner
+
+
 def send_hello_world(web_client: slack.WebClient, user_id: str, channel: str):
     # Create a new onboarding tutorial.
     hw_class = HelloWorld()
@@ -52,6 +55,10 @@ def message(**payload):
 
     if text and text.lower() == "start":
         return send_hello_world(web_client, user_id, channel_id)
+
+    if text.startswith("!trophy"):
+        runner = TrophyRunner(user_id, channel_id, text)
+        return runner.process_message(web_client)
 
 # int main() if you will.  Or public static void main(String[] args) if you really like typing
 if __name__ == "__main__":
